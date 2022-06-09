@@ -8,8 +8,6 @@ function computerPlay() {
     return outcomes[choice]
 }
 
-const playerSelection = "rock";
-const computerSelection = computerPlay();
 
 
 function playRound(playerSelection, computerSelection) {
@@ -45,10 +43,20 @@ function game() {
 
     let computer_score = 0;
     let player_score = 0;
+    let playerSelectionCorrect
+    let playerSelection
 
     for (let i = 0; i < 5; i++) {
         let round = i + 1
         console.log("Round number " + round.toString())
+
+        while (!playerSelectionCorrect) {
+            playerSelection = prompt("Choose rock, paper or scissors!")
+            if (playerSelection.toLowerCase() == 'rock' || playerSelection.toLowerCase() == 'paper' || playerSelection.toLowerCase() == 'scissors') {
+                playerSelectionCorrect = true
+            }
+        }
+        const computerSelection = computerPlay();
 
         console.log("Player chose " + playerSelection)
         console.log("Computer chose " + computerSelection)
@@ -61,13 +69,16 @@ function game() {
             player_score++
         }
 
-        if (player_score > computer_score) {
-            console.log("You won!")
-        } else {
-            console.log("You lost!")
-        }
-
+        playerSelectionCorrect = false
     }
+
+    if (player_score > computer_score) {
+        console.log("You won!")
+    } else {
+        console.log("You lost!")
+    }
+
+
 }
 
 game()
