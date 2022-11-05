@@ -1,83 +1,98 @@
-function randomIntFromInterval(min, max) { // min and max included 
+let COMPUTERSCORE
+let PLAYERSCORE
+let ROUNDRESULT
+let ROUNDWINNER
+
+function randomIntFromInterval(min, max) { // min and max included
     return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
 function computerPlay() {
+    let choice
     const outcomes = ['rock', 'paper', 'scissors']
     choice = randomIntFromInterval(0, 2)
     return outcomes[choice]
 }
 
+function isWin(playerSelection, computerSelection) {
+    let player_move
+    let computer_move
 
-
-function playRound(playerSelection, computerSelection) {
-
-    const losing_combinatons_player = [
+    const losing_combinations_player = [
         ['paper', 'scissors'],
         ['rock', 'paper'],
         ['scissor', 'rock']
     ]
 
-    const playerSelectionSerialized = playerSelection.toLowerCase();
-
-    if (playerSelection == computerSelection) {
-        return ["Draw!", "draw"]
-    } else {
-        for (array of losing_combinatons_player) {
-            player_move = array[0]
-            computer_move = array[1]
-            if ((player_move == playerSelection) && (computer_move == computerSelection)) {
-                return ["You Lose! " + computerSelection + " beats " + playerSelection, "computer"]
-            }
+    for (array of losing_combinations_player) {
+        player_move = array[0]
+        computer_move = array[1]
+        if ((player_move == playerSelection) && (computer_move == computerSelection)) {
+            return false
+        } else {
+            return true
         }
-
-        return ["You Won! " + playerSelection + " beats " + computerSelection, "player"]
     }
 
+}
 
-    return "You Lose! Paper beats Rock"
+function isDraw(playerSelection, computerSelection){
+    return (playerSelection == computerSelection)
+}
+
+
+
+function playRound(e) {
+
+    const playerSelection = e.target.textContent
+    const computerSelection = computerPlay()
+
+    // const playerSelectionSerialized = playerSelection.toLowerCase();
+
+    if (isDraw(playerSelection, computerSelection)) {
+        ROUNDWINNER = "Draw!"
+        ROUNDRESULT = "It's a draw!"
+        console.log("it is a draw")
+    } else {
+        if  (isWin(playerSelection, computerSelection)) {
+            ROUNDWINNER = "player"
+            ROUNDRESULT = "You Won! " + playerSelection + " beats " + computerSelection
+            PLAYERSCORE++
+            console.log("it is a win")
+        } else {
+            ROUNDWINNER = "computer"
+            ROUNDRESULT = "You Lost! " + computerSelection + " beats " + playerSelection
+            COMPUTERSCORE++
+            console.log("it is a loss")
+        }
+    }
+
+    updateScore()
+}
+
+function updateScore(){
+    // update the score board & results
+    const roundResult = document.getElementById("roundResult")
+    roundResult.textContent = ROUNDRESULT
+
+    const scoreBoard = document.getElementById("scoreBoard")
+    scoreBoard.textContent = "player: " + PLAYERSCORE + "\t" + "computer: " + COMPUTERSCORE
 }
 
 function game() {
-    console.log("let's play rock paper scissors!")
 
-    let computer_score = 0;
-    let player_score = 0;
-    let playerSelectionCorrect
-    let playerSelection
+    ROUNDRESULT = ""
+    COMPUTERSCORE = 0
+    PLAYERSCORE = 0
 
-    for (let i = 0; i < 5; i++) {
-        let round = i + 1
-        console.log("Round number " + round.toString())
-
-        while (!playerSelectionCorrect) {
-            playerSelection = prompt("Choose rock, paper or scissors!")
-            if (playerSelection.toLowerCase() == 'rock' || playerSelection.toLowerCase() == 'paper' || playerSelection.toLowerCase() == 'scissors') {
-                playerSelectionCorrect = true
-            }
-        }
-        const computerSelection = computerPlay();
-
-        console.log("Player chose " + playerSelection)
-        console.log("Computer chose " + computerSelection)
-        result = playRound(playerSelection, computerSelection)
-        console.log(result[0])
-
-        if (result[1] == "computer") {
-            computer_score++
-        } else {
-            player_score++
-        }
-
-        playerSelectionCorrect = false
+    function logMove(e){
+        console.log(e.target.textContent)
     }
 
-    if (player_score > computer_score) {
-        console.log("You won!")
-    } else {
-        console.log("You lost!")
-    }
-
+    // attach listeners for possible actions
+    const playButtonsContainer = document.querySelector(".playButtons")
+    const playButtons = Array.from(playButtonsContainer.querySelectorAll(":scope > button"));
+    playButtons.forEach(playButton => playButton.addEventListener('click', playRound));
 
 }
 

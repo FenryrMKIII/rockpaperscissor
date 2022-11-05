@@ -1,0 +1,35 @@
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    grid-auto-rows: minmax(50px, auto);
+}
+
+.playButtons{
+    grid-column: 1 / 4;
+    grid-row: 1;
+    justify-self: center;
+    /*display:flex;*/
+    /*justify-content:space-around;*/
+}
+
+button{
+    font-family: "72 Monospace";
+    font-size: 3em;
+}
+
+#roundResult{
+    grid-column: 1 / 4;
+    grid-row: 2;
+    display:flex;
+    justify-content:space-around;
+    font-size: 1em;
+}
+
+#scoreBoard{
+    grid-column: 1 / 4;
+    grid-row: 3;
+    display:flex;
+    justify-content:space-around;
+    font-size: 1em;
+}
